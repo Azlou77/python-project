@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 # read file csv wiht panda
 df_ville = pd.read_csv("C:\xampp\htdocs\python-project\csv\Players_WC2014.csv", delimiter = "\t")
