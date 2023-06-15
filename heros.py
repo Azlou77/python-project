@@ -12,9 +12,15 @@ class Personnage:
     def attaquer(self, cible):
         degats = random.randint(1, self.attaque)
         cible.subir_degats(degats)
-
+       
+    # function to view the damage take by the hero or monster
     def subir_degats(self, degats):
         self.points_de_vie -= degats
+
+    # function to regenerate the hero
+    def steal_life (self, regenerate):
+        self.points_de_vie += regenerate
+    
 
 # class Hero example of Kratos in God of War
 class Heros(Personnage):
@@ -50,14 +56,56 @@ class AxeofLeviathan(Heros):
     def __init__(self):
         super().__init__("Kratos", 100, 10)
         # define the percentage sucess of the attack
-        self.pourcentage = 0.9
+        self.pourcentage = 1.0
 
 
 class LamesofChaos(Heros):
     def __init__(self):
         super().__init__("Kratos", 100, 25)
         # define the percentage sucess of the attack
-        self.pourcentage = 0.6
+        self.pourcentage = 0.8
+
+# extensions of the class Heros with magics attacks: wrathofPoseidon, thunderboltofZeus, armyofHades
+class wrathofPoseidon(Heros):
+    def __init__(self):
+        super().__init__("Kratos", 100, 10)
+        # define the percentage sucess of the attack
+        self.possibility = 0.8
+
+        # function to add supplementary damage betwween 10 and 25
+    def degats_supplementaires(self):
+        return random.randint(10, 25)
+    
+
+class thunderboltofZeus(Heros):
+    def __init__(self):
+        super().__init__("Kratos", 100, 25)
+
+        # define the percentage sucess of the attack
+        self.possibility = 0.7
+
+        # function to allow the hero to not be attacked
+    def esquiver(self):
+        if random.random() < 0.3:
+            # the hero is not attacked
+            print("Kratos esquive l'attaque!")
+            return True
+        else:
+            print("Kratos n'a pas esquivé l'attaque!")
+            # the hero is attacked
+            return False
+    
+class armyofHades(Heros):
+    def __init__(self):
+        super().__init__("Kratos", 100, 15)
+        # define the percentage sucess of the attack
+        self.possibility = 0.8
+
+        # function to regenerate the hero
+    def regenerate(self):
+        return random.randint(10, 25)
+    
+
 
 
 # extensions of the class Monster with weapons: RegarddePierre, Massue, Cornes 
@@ -87,7 +135,10 @@ monstres = [Gorgone(), Cyclope(), Minotaure()]
 degats = random.randint(1, heros.attaque)
 weapon = [AxeofLeviathan(), LamesofChaos()]
 weapon_monstre = [RegarddePierre(), Massue(), Cornes()]
-
+magic = [wrathofPoseidon(), thunderboltofZeus(), armyofHades()]
+degats_supplementaires = wrathofPoseidon().degats_supplementaires()
+esquiver = thunderboltofZeus().esquiver()
+regenerate = armyofHades().regenerate()
 
 # Game loop
 while heros.points_de_vie > 0 and len(monstres) > 0:
@@ -103,25 +154,78 @@ while heros.points_de_vie > 0 and len(monstres) > 0:
 
         # Choose the attacks of the hero
         choix = input("Attaque légère (1) ou attaque puissante (2)? ")
-        if choix == "1":
+
+        # Then Choose attack magic of the hero
+        choix_magic = input("Colère de Poséidon  (1) ou Foudre de Zeus (2) ou Armée de Hadès (3)? ")
+
 
             # Attack of the hero Kratos with AxeofLeviathan weapon
+        if choix == "1":
+            # If attack magic is wrathofPoseidon 
+            if choix_magic == "1":
+                heros.attaquer(monstre)
+                degats = random.randint(1, heros.attaque)
+                degats = degats * weapon[0].pourcentage
+                degats = degats * magic[0].possibility
+            
+            # Display the damage inflicted by the hero with AxeofLeviathan weapon plus wrathofPoseidon magic and display damage supplementaires
+                print(f"{heros.nom} attaque {monstre.nom} et lui inflige {degats} points de dégâts avec l'arme {weapon[0].__class__.__name__} et la magie {magic[0].__class__.__name__}! {degats_supplementaires} points de dégâts supplémentaires!")
+
+        # If attack magic is thunderboltofZeus with AxeofLeviathan
+        elif choix_magic == "2":
             heros.attaquer(monstre)
             degats = random.randint(1, heros.attaque)
             degats = degats * weapon[0].pourcentage
+            degats = degats * magic[1].possibility
             
-            # Display the damage inflicted by the hero with AxeofLeviathan weapon
-            print(f"{heros.nom} attaque {monstre.nom} et lui inflige {degats} points de dégâts avec l'arme {weapon[0].__class__.__name__}!")
-        
-        elif choix == "2":
+            # Display the damage inflicted by the hero with AxeofLeviathan weapon plus thunderboltofZeus magic and display if the hero esquive the attack
+            print(f"{heros.nom} attaque {monstre.nom} et lui inflige {degats} points de dégâts avec l'arme {weapon[0].__class__.__name__} et la magie {magic[1].__class__.__name__}! {esquiver} n'est pas touché!")
 
+        # If attack magic is armyofHades with AxeofLeviathan
+        elif choix_magic == "3":
+            heros.attaquer(monstre)
+            degats = random.randint(1, heros.attaque)
+            degats = degats * weapon[0].pourcentage
+            degats = degats * magic[2].possibility
+
+           
+            # Display the damage inflicted by the hero with AxeofLeviathan weapon plus armyofHades magic and display if the hero regenerate his life
+            print(f"{heros.nom} attaque {monstre.nom} et lui inflige {degats} points de dégâts avec l'arme {weapon[0].__class__.__name__} et la magie {magic[2].__class__.__name__}! {regenerate} points de vies supplémentaires!")
+
+     
             # Second attack of the hero Kratos with LamesofChaos weapon for heavy attack
+        if choix == "2":
+            # If attack magic is wrathofPoseidon with LamesofChaos
+            if choix_magic == "1":
+                heros.attaquer(monstre)
+                degats = random.randint(1, heros.attaque)
+                degats = degats * weapon[1].pourcentage
+                degats = degats * magic[0].possibility
+
+            # Display the damage inflicted by the hero with LamesofChaos weapon plus wrathofPoseidon magic and display damage supplementaires
+                print(f"{heros.nom} attaque {monstre.nom} et lui inflige {degats} points de dégâts avec l'arme {weapon[1].__class__.__name__} et la magie {magic[0].__class__.__name__}! {degats_supplementaires} points de dégâts supplémentaires!")
+
+            # If attack magic is thunderboltofZeus with LamesofChaos
+        elif choix_magic == "2":
             heros.attaquer(monstre)
             degats = random.randint(1, heros.attaque)
             degats = degats * weapon[1].pourcentage
+            degats = degats * magic[1].possibility
 
-            # Display the damage inflicted by the hero with LamesofChaos weapon
-            print(f"{heros.nom} attaque {monstre.nom} et lui inflige {degats} points de dégâts avec l'arme {weapon[1].__class__.__name__}!")
+    
+            # Display the damage inflicted by the hero with LamesofChaos weapon plus thunderboltofZeus magic and display if the hero esquive the attack
+            print(f"{heros.nom} attaque {monstre.nom} et lui inflige {degats} points de dégâts avec l'arme {weapon[1].__class__.__name__} et la magie {magic[1].__class__.__name__}! {esquiver} !")
+           
+
+            # If attack magic is armyofHades with LamesofChaos
+        elif choix_magic == "3":
+            heros.attaquer(monstre)
+            degats = random.randint(1, heros.attaque)
+            degats = degats * weapon[1].pourcentage
+            degats = degats * magic[2].possibility
+                
+            # Display the damage inflicted by the hero with LamesofChaos weapon and armyofHades magic and display if the hero regenerate his life
+            print(f"{heros.nom} attaque {monstre.nom} et lui inflige {degats} points de dégâts avec l'arme {weapon[1].__class__.__name__} et la magie {magic[2].__class__.__name__}! {regenerate} points de vies supplémentaires!")
 
         else:
             print("Choix invalide!")
