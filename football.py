@@ -4,11 +4,13 @@ import matplotlib.pyplot as plt
 
 
 # read file csv wiht panda
-df_ville = pd.read_csv("C:\xampp\htdocs\python-project\csv\Players_WC2014.csv", delimiter = "\t")
+df = pd.read_csv("csv/Players_WC2014.csv")
 
-# calcul the median to have the number of players in each teams
-print(df_ville["Team"].value_counts())
+# determine the number of players per team
+df = pd.read_csv('filename.csv')
+team_counts = df.groupby('team_name').size()
+print(team_counts)
 
-# create a dictionary with the number of players in each teams
-dict_team = dict(df_ville["Team"].value_counts())
-
+# determine the 3 players with the most distance traveled
+player_distances = df.groupby('Name')['Distance Covered'].sum().sort_values
+print(player_distances)
