@@ -17,6 +17,9 @@ print(player_distances)
 
 
 # Determine the 10 players with higthest speed
+player_speed = df_football.groupby('Name')['Sprint Speed'].sum().sort_values
+print(player_speed)
+
 
 
 
