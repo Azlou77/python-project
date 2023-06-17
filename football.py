@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import glob as glob
 
 
 # read file csv wiht panda
@@ -17,8 +18,26 @@ print(player_distances)
 
 
 # Determine the 10 players with higthest speed
-player_speed = df_football.groupby('Name')['Sprint Speed'].sum().sort_values
+player_speed = df_football.groupby('Name')['Top Speed'].sum().sort_values
 print(player_speed)
+
+# In this 10 players with higthest speed, determine the players who has the most distance traveled whihout the ball
+player_speed_distance = df_football.groupby('Name')['Distance Covered Not In Possession'].sum().sort_values
+print(player_speed_distance)
+
+# Determine the players with highest speed
+player_speed = df_football.groupby('Name')['Top Speed'].sum().sort_values
+
+# Sort by name team  the players with highest speed
+player_speed_team = df_football.groupby(['Team', 'Name'])['Top Speed'].sum().sort_values
+print(player_speed_team)
+
+
+
+
+
+
+
 
 
 
