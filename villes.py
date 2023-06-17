@@ -2,41 +2,25 @@ import pandas as pd
 import numpy as np
 
 # Read file villes.txt wiht panda with delimiters: spaces, no header and point as decimal separator
-df_ville = pd.read_csv("villes.txt", delimiter = "\t", header = None, decimal = ".")
+df_ville = pd.read_csv("villes.txt", delimiter = "\t", decimal = ".")
+
+# Add column names
+df_ville.columns = ["Nom Ville", "MAJ", "Code Postal", "Code INSEE", "Code Région", "Latitude", "Longitude", "Eloignement"]
 
 
-# Remove useless columns "MAJ"
-df_ville = df_ville.drop(columns = [6])
+# Remove the colum "MAJ" because it's not useful
+df_ville = df_ville.drop(columns = ["MAJ"])
 
-# Remove duplicate data  in Pandas DataFrame
-df_ville = df_ville.drop_duplicates(
-    subset = [0, 1, 2, 3, 4, 5],
-    keep = "first"
 
-)
+# Identify duplicate data in Pandas DataFrame in column "Code INSEE"
+duplicateRowsDF = df_ville[df_ville.duplicated(["Code INSEE"])]
 
-# Rename columns
-df_ville = df_ville.rename(columns = {
-    0: "Nom Ville",
-    1: "Code Postal",
-    2: "Code INSEE",
-    3: "Code Région",
-    4: "Latitude",
-    5: "Longitude",
-    7: "Eloignement"
-})
-
-# Display the first 5 rows
-print(df_ville.head())
+# Display duplicate data in Pandas DataFrame
+print("Duplicate Rows based on a single column are:", duplicateRowsDF, sep='\n')
 
 
 
 
-
-
-
-# # find INSEE's numbers codes differents
-# print(df_ville["Code INSEE"].unique())
 
 # # calcul average with grouby 
 # # average of Nom Ville
@@ -59,6 +43,18 @@ print(df_ville.head())
 
 # # average of Eloignement
 # print(df_ville.groupby["Eloignement"].mean())
+
+
+
+# Display the first 5 rows
+print(df_ville.head())
+
+
+
+
+
+
+
 
 # # count the number of cities in each regions
 # print(df_ville["Code Région"].value_counts())
